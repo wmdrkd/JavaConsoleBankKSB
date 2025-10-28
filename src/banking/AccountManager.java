@@ -104,7 +104,6 @@ public class AccountManager{
 		System.out.println("계좌번호 : ");
 		String accNum = BankingSystemMain.sc.nextLine();
 		
-		boolean accF = false;
 		Iterator<Account> itr = accSet.iterator();
 		while(itr.hasNext()) {
 			Account rAcc = itr.next();
