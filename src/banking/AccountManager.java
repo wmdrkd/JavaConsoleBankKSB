@@ -1,5 +1,10 @@
 package banking;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.HashSet;
 import java.util.InputMismatchException;
 import java.util.Iterator;
@@ -8,6 +13,17 @@ public class AccountManager{
 	//private Account[] acc;
 	//private int numOfAccount;
 	private HashSet<Account> accSet;
+	//AutoSaver as = new AutoSaver();
+	
+	
+
+	public HashSet<Account> getAccSet() {
+		return accSet;
+	}
+
+	public void setAccSet(HashSet<Account> accSet) {
+		this.accSet = accSet;
+	}
 
 	/*
 	public AccountManager(int n) {
@@ -31,10 +47,19 @@ public class AccountManager{
 		System.out.println("-----계좌선택------");
 		System.out.println("1.보통계좌");
 		System.out.println("2.신용신뢰계좌");
+		System.out.println("3.특판계좌");
 		accChoice = BankingSystemMain.sc.nextInt();
 		BankingSystemMain.sc.nextLine();
 		
 		if(accChoice == 1) {
+			Account newAcc =  new NormalAccount("", "", 0, 0).makAccount();
+			
+			duplicateCheck(newAcc);
+			
+			System.out.println("계좌계설이 완료되었습니다.");
+			System.out.println();
+			
+			/*
 			System.out.println("계좌번호 :");
 			account = BankingSystemMain.sc.nextLine();
 			System.out.println("고객이름 :");
@@ -44,9 +69,11 @@ public class AccountManager{
 			System.out.println("기본이자%(정수형태로입력) :");
 			interest = BankingSystemMain.sc.nextInt();
 			BankingSystemMain.sc.nextLine();
+			 */
 			
 			//acc[numOfAccount++] = new NormalAccount(account, name, balance, interest);
-			NormalAccount newAcc = new NormalAccount(account, name, balance, interest);
+			
+			/*
 			if(!accSet.add(newAcc)) {
 				System.out.println("중복계좌발견됨.");
 				System.out.println("덮어쓸까요?(Y or N)");
@@ -71,10 +98,17 @@ public class AccountManager{
 					return;
 				}
 			}
-			System.out.println("계좌계설이 완료되었습니다.");
-			System.out.println();
+			*/
 		}
 		else if(accChoice == 2) {
+			
+			Account newAcc = new HighCreditAccount("", "", 0, 0, "").makAccount();
+			
+			duplicateCheck(newAcc);
+			
+			System.out.println("계좌계설이 완료되었습니다.");
+			System.out.println();
+			/*
 			System.out.println("계좌번호 :");
 			account = BankingSystemMain.sc.nextLine();
 			System.out.println("고객이름 :");
@@ -86,16 +120,76 @@ public class AccountManager{
 			BankingSystemMain.sc.nextLine();
 			System.out.println("신용등급(A,B,C등급) :");
 			credit = BankingSystemMain.sc.nextLine();
+			 */
+			
+			/*
+			if(!accSet.add(newAcc)) {
+				System.out.println("중복계좌발견됨.");
+				System.out.println("덮어쓸까요?(Y or N)");
+				String cStr = BankingSystemMain.sc.nextLine();
+				
+				if(cStr.toUpperCase().equals("Y")) {
+					Iterator<Account> itr = accSet.iterator();
+					while(itr.hasNext()) {
+						Account acc = itr.next();
+						if(acc.account.equals(newAcc.account)) {
+							itr.remove();
+							break;
+						}
+					}
+					accSet.add(newAcc);
+					System.out.println("새로운 정보로 갱신되었습니다.");
+					System.out.println();
+					return;
+				}
+				else {
+					System.out.println("기존정보를 유지합니다.");
+					return;
+				}
+			}
+			*/
 			
 			/*
 			acc[numOfAccount++] = new HighCreditAccount(account, name, balance, interest
 					, credit);
 			 */
-			accSet.add(new HighCreditAccount(account, name, balance, interest, credit));
+			//accSet.add(new HighCreditAccount(account, name, balance, interest, credit));
+		}
+		else if(accChoice == 3) {
+			Account newAcc = new SpecialAccount("", "", 0, 0).makAccount();
+			duplicateCheck(newAcc);
+			
 			System.out.println("계좌계설이 완료되었습니다.");
 			System.out.println();
 		}
 		
+	}
+	
+	void duplicateCheck (Account newAcc) {
+		if(!accSet.add(newAcc)) {
+			System.out.println("중복계좌발견됨.");
+			System.out.println("덮어쓸까요?(Y or N)");
+			String cStr = BankingSystemMain.sc.nextLine();
+			
+			if(cStr.toUpperCase().equals("Y")) {
+				Iterator<Account> itr = accSet.iterator();
+				while(itr.hasNext()) {
+					Account acc = itr.next();
+					if(acc.account.equals(newAcc.account)) {
+						itr.remove();
+						break;
+					}
+				}
+				accSet.add(newAcc);
+				System.out.println("새로운 정보로 갱신되었습니다.");
+				System.out.println();
+				return;
+			}
+			else {
+				System.out.println("기존정보를 유지합니다.");
+				return;
+			}
+		}
 	}
 	
 	void deleteAccount() {
@@ -122,7 +216,7 @@ public class AccountManager{
 		int deposit;
 		
 		try {
-			System.out.println("***입 금****");
+			System.out.println("***입 금***");
 			System.out.println("계좌번호와 입금할 금액을 입력하세요");
 			System.out.println("계좌번호 :");
 			account = BankingSystemMain.sc.nextLine();
@@ -155,14 +249,15 @@ public class AccountManager{
 			}
 			*/
 			for(Account acc : accSet) {
-				if(acc instanceof NormalAccount) {
-					NormalAccount nAcc = (NormalAccount)acc;
-					nAcc.balance += (deposit + Math.floor(nAcc.balance * nAcc.interest));
-				}
-				else if(acc instanceof HighCreditAccount) {
-					HighCreditAccount hAcc = (HighCreditAccount)acc;
-					hAcc.balance += (deposit + Math.floor(hAcc.balance * hAcc.interest)
-					+ Math.floor(hAcc.balance * hAcc.creditInt));
+				if(acc.account.equals(account)) {
+					if(acc instanceof NormalAccount) {
+						NormalAccount nAcc = (NormalAccount)acc;
+						nAcc.depositMoney(deposit);
+					}
+					else if(acc instanceof HighCreditAccount) {
+						HighCreditAccount hAcc = (HighCreditAccount)acc;
+						hAcc.depositMoney(deposit);
+					}
 				}
 			}
 			System.out.println("입금이 완료되었습니다.");
@@ -222,32 +317,107 @@ public class AccountManager{
 		*/
 		
 		for(Account acc : accSet) {
-			if(acc.balance < withdraw) {
-				System.out.println("잔고가 부족합니다. 금액전체를 출금할까요? (Y or N)");
-				String choChar = BankingSystemMain.sc.nextLine();
-				
-				if(choChar.toUpperCase().equals("Y")) {
-					acc.balance -= acc.balance;
+			if(acc.account.equals(account)) {
+				if(acc.balance < withdraw) {
+					System.out.println("잔고가 부족합니다. 금액전체를 출금할까요? (Y or N)");
+					String choChar = BankingSystemMain.sc.nextLine();
+					
+					if(choChar.toUpperCase().equals("Y")) {
+						acc.balance -= acc.balance;
+					}
+					else {
+						System.out.println("출금이 취소 되었습니다.");
+						return;
+					}
 				}
 				else {
-					System.out.println("출금이 취소 되었습니다.");
-					return;
+					acc.balance -= withdraw;
 				}
+				System.out.println("출금이 완료되었습니다.");
+				System.out.println();
 			}
-			else {
-				acc.balance -= withdraw;
-			}
-			System.out.println("출금이 완료되었습니다.");
-			System.out.println();
 		}
 	}
 	
 	void showAccInfo() {
 		System.out.println("***계좌정보출력***");
 		for(Account acc : accSet) {
+			System.out.println("-------------");
 			acc.showAccInfo();
+			System.out.println("-------------");
 		}
 		System.out.println("전체계좌정보 출력이 완료되었습니다.");
 		System.out.println();
 	}
+	
+	void saveAccInfo() {
+		try {
+			ObjectOutputStream out = new ObjectOutputStream(
+					new FileOutputStream("src/banking/AccountInfo.obj"));
+			
+			out.writeObject(accSet);
+			System.out.println("AccountInfo.obj 파일로 저장되었습니다.");
+			
+			out.close();
+		}
+		catch (Exception e) {
+			System.out.println("계좌정보 직렬화 중 예외발생");
+			e.printStackTrace();
+		}
+	}
+	
+	void readAccInfo() {
+		File file = new File("src/banking/AccountInfo.obj");
+		
+		if(!file.exists()) {
+			System.out.println("AccountInfo.obj 파일없음");
+			return;
+		}
+		
+		try {
+			ObjectInputStream in = new ObjectInputStream(
+					new FileInputStream("src/banking/AccountInfo.obj"));
+			
+			Object obj = in.readObject();
+			
+			if(obj instanceof HashSet) {
+				accSet = (HashSet<Account>)obj;
+				System.out.println("AccountInfo.obj 복원완료");
+			}
+		}
+		catch (Exception e) {
+			System.out.println("계좌 복원 중 문제발생");
+			e.printStackTrace();
+		}
+	}
+	/*
+	void autoSave() {
+		System.out.println("***자동저장을 시작합니다.***");
+		System.out.println("쓰레드 = " + as.toString());
+		System.out.println("저장옵션을 선택하세요.");
+		System.out.println("1.자동저장 On, 2.자동저장 Off");
+		System.out.print("선택 : ");
+		int choNum = BankingSystemMain.sc.nextInt();
+		BankingSystemMain.sc.nextLine();
+		
+		if(choNum == 1) {
+			if(as.isAlive()) {
+				System.out.println("이미 자동저장이 실행중입니다.");
+				return;
+			}
+			
+			System.out.println("자동저장을 시작합니다.");
+			as.setDaemon(true);
+			as.start();
+		}
+		else if(choNum == 2) {
+			try {
+				as.interrupt();
+			}
+			catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+	}
+	*/
 }

@@ -1,6 +1,8 @@
 package banking;
 
-public abstract class Account {
+import java.io.Serializable;
+
+public abstract class Account implements Serializable{
 	
 	String account;
 	String name;
@@ -17,6 +19,10 @@ public abstract class Account {
 		System.out.println("고객이름 > " + this.name);
 		System.out.println("잔고 > " + this.balance);
 	}
+	
+	abstract Account makAccount();
+	
+	abstract void depositMoney(int money);
 
 	@Override
 	public int hashCode() {

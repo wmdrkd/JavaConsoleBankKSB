@@ -23,6 +23,8 @@ public class BankingSystemMain implements ICustomDefine{
 		//AccountManager acM = new AccountManager(50);
 		AccountManager acM = new AccountManager();
 		
+		acM.readAccInfo();
+		
 		while (true) {
 			
 			menuShow();
@@ -63,9 +65,17 @@ public class BankingSystemMain implements ICustomDefine{
 					}
 					case EXIT: 
 					{
+						acM.saveAccInfo();
 						System.out.println("프로그램을 종료합니다.");
 						return;
 					}
+					/*
+					case AUTOSAVE: 
+					{
+						//acM.autoSave();
+						break;
+					}
+					 */
 				}
 			}
 			catch (InputMismatchException e) {
