@@ -171,15 +171,7 @@ public class AccountManager{
 			System.out.println("덮어쓸까요?(Y or N)");
 			String cStr = BankingSystemMain.sc.nextLine();
 			
-			if(cStr.toUpperCase().equals("Y")) {
-				Iterator<Account> itr = accSet.iterator();
-				while(itr.hasNext()) {
-					Account acc = itr.next();
-					if(acc.account.equals(newAcc.account)) {
-						itr.remove();
-						break;
-					}
-				}
+				accSet.remove(newAcc);
 				accSet.add(newAcc);
 				System.out.println("새로운 정보로 갱신되었습니다.");
 				System.out.println();
@@ -421,3 +413,4 @@ public class AccountManager{
 	}
 	*/
 }
+
